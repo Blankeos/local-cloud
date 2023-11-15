@@ -10,7 +10,7 @@
 	}
 </script>
 
-<div class="flex aspect-square h-full max-h-[180px] w-full max-w-[180px] flex-col bg-white">
+<div class="flex aspect-square flex-shrink flex-grow flex-col bg-white">
 	<div
 		class="relative grid h-full w-full flex-1 place-items-center overflow-hidden break-words bg-gray-100 p-3"
 	>
