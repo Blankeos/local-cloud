@@ -1,5 +1,7 @@
 # ☁️⚡ Local-Cloud
 
+https://user-images.githubusercontent.com/38070918/283199618-5f2b540a-fe93-4bf9-ac27-cdb46934b818.mp4
+
 An awesome tool for transferring files from your phone <-> computer or any device in your local network.
 
 The concept is a lot like Google Drive, but works locally. The only prerequisite is that your own computer
