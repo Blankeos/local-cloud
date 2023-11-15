@@ -1,15 +1,19 @@
 import { fail } from '@sveltejs/kit';
 import { writeFileSync, readdirSync } from 'node:fs';
+import type { PageServerLoad } from './$types';
+import { getCloudRootPath } from '@/lib/server/getCloudRootPath';
 
-export const load = () => {
-	const filenames = readdirSync('static');
+export const load: PageServerLoad = ({ url, request }) => {
+	const filenames = readdirSync(getCloudRootPath());
 
 	const files: { fileName: string; url: string }[] = [];
 
 	filenames.forEach((file) => {
+		const protocol = request.headers.get('x-forwarded-proto') || 'http';
+
 		files.push({
 			fileName: file,
-			url: `http://localhost:5173/static/${file}`
+			url: `${protocol}://${url.host}/api/cloud/${file}`
 		});
 	});
 
@@ -20,24 +24,29 @@ export const load = () => {
 
 export const actions = {
 	default: async ({ request }) => {
-		const formData = Object.fromEntries(await request.formData());
-		console.log('uploading...', typeof formData.fileToUpload);
+		const formData = await request.formData();
 
-		if (!(formData.fileToUpload as File).name) {
-			console.log(formData.fileToUpload, 'Asdas');
+		const files: Array<File> = [];
+		for (const entry of formData.entries()) {
+			if (entry[0] === 'fileToUpload') {
+				files.push(entry[1] as File);
+			}
+		}
+
+		if (files.length === 0) {
 			return fail(400, {
 				error: true,
 				message: 'You must provide a file to upload'
 			});
 		}
 
-		console.log('oging to upload');
-		const { fileToUpload } = formData as { fileToUpload: File };
+		// Write the file to the cloud root path.
+		let index = 0;
+		for (const file of files) {
+			writeFileSync(getCloudRootPath(file.name), Buffer.from(await file.arrayBuffer()));
+			index = index + 1;
+		}
 
-		// Write the file to the static folder
-		writeFileSync(`static/${fileToUpload.name}`, Buffer.from(await fileToUpload.arrayBuffer()));
-
-		console.log('done uploading');
 		return {
 			success: true
 		};

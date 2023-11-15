@@ -20,7 +20,9 @@
 				style={`background: url('${downloadLink}'); background-position: center; background-size: cover;`}
 			/>
 
-			<span class="relative">{filename}</span>
+			<span class="absolute inset-0 grid place-items-center bg-black/40 text-center text-white"
+				>{filename}</span
+			>
 		{:else}
 			⚠️ No filename
 		{/if}

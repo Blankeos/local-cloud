@@ -16,8 +16,7 @@
 			class="mt-5 flex flex-col items-center gap-y-4"
 		>
 			<div class="group">
-				<label for="file">Upload your file</label>
-				<input type="file" id="file" name="fileToUpload" required />
+				<input type="file" multiple id="file" name="fileToUpload" required />
 			</div>
 
 			<button type="submit" class="active w-full bg-sky-500 px-2 py-4 text-sky-50">Submit</button>

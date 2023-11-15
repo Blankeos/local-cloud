@@ -1,4 +1,13 @@
-# create-svelte
+### Local-Cloud
+
+An awesome tool for transferring files from your phone <-> computer or any device in your local network.
+
+The concept is a lot like Google Drive, but works locally. The only prerequisite is that your own computer
+has to run this program and it will act as the server of the network. From there, you can upload to your computer's
+folder from any device on your network. Because it's on your own network, you can experience
+super fast speeds unlike uploading it on Google Drive!
+
+<!-- # create-svelte
 
 Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
 
@@ -35,4 +44,4 @@ npm run build
 
 You can preview the production build with `npm run preview`.
 
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment. -->
