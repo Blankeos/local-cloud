@@ -1,7 +1,48 @@
-<script>
+<script lang="ts">
+	import { applyAction, deserialize } from '$app/forms';
 	import FileCard from '@/lib/client/components/FileCard.svelte';
+	import { toast } from 'svelte-sonner';
+	import type { ActionResult } from '@sveltejs/kit';
+	import { invalidateAll } from '$app/navigation';
+	import axios from 'axios';
 
 	export let data;
+	let formElement: HTMLFormElement;
+
+	async function handleSubmit(event: { currentTarget: EventTarget & HTMLFormElement }) {
+		const data = new FormData(event.currentTarget);
+
+		// --- FETCH REQUEST ---
+
+		const response = await axios.post(event.currentTarget.action, data, {
+			headers: { 'Content-Type': 'multipart/form-data' },
+			onUploadProgress: (e: any) => {
+				if (!e) return;
+
+				const uploadProgress = (e.loaded / e.total) * 100;
+
+				toast.loading(`${uploadProgress.toFixed()}% Uploading File...`, {
+					id: 'UPLOAD_TOAST',
+					duration: Infinity
+				});
+			},
+			responseType: 'text'
+		});
+		// --- FETCH REQUEST ----
+
+		const result: ActionResult = deserialize(response.data);
+
+		if (result.type === 'success') {
+			toast.success('Uploaded!', { id: 'UPLOAD_TOAST', duration: 1000 });
+			// rerun all `load` functions, following the successful update
+			await invalidateAll();
+			formElement.reset(); // Reset the form.
+		} else {
+			toast.error('Failed to Upload', { id: 'UPLOAD_TOAST' });
+		}
+
+		applyAction(result);
+	}
 </script>
 
 <div class="flex h-screen flex-col bg-blue-50">
@@ -11,9 +52,11 @@
 
 		<!-- Upload Area -->
 		<form
+			bind:this={formElement}
 			method="POST"
 			enctype="multipart/form-data"
 			class="mt-5 flex flex-col items-center gap-y-4"
+			on:submit|preventDefault={handleSubmit}
 		>
 			<div class="group">
 				<input type="file" multiple id="file" name="fileToUpload" required />
